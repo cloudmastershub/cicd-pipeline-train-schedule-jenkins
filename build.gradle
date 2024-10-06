@@ -9,24 +9,10 @@ node {
     npmVersion = "8.3.0"  // Update to a more recent version of NPM
 }
 
-// Declare NPM tasks
-task npmInstall(type: NpmTask) {
-    args = ['install']
-}
+// The npmInstall, npm_test, and npm_build tasks are automatically created by the Node.js plugin, 
+// so no need to manually define them.
 
-task npm_test(type: NpmTask) {
-    args = ['test']
-}
-
-task npm_build(type: NpmTask) {
-    args = ['run', 'build']
-}
-
-// Declare a task to create a zip of the app
 task zip(type: Zip) {
-    doFirst {
-        file("dist").mkdirs()
-    }
     from ('.') {
         include "*"
         include "bin/**"
@@ -37,7 +23,7 @@ task zip(type: Zip) {
         include "views/**"
     }
     destinationDir(file("dist"))
-    baseName "trainSchedule"
+    archiveFileName = "trainSchedule.zip"
 }
 
 // Declare task dependencies
