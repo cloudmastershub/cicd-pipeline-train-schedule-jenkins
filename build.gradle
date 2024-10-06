@@ -1,36 +1,44 @@
 plugins {
-  //inlude the nodeJS plugin to execute nodejs and npm tasks
-    id 'com.github.node-gradle.node' version '3.0.0'
+    // Use the new Node.js plugin to execute Node.js and NPM tasks
+    id "com.github.node-gradle.node" version "3.0.0"
 }
 
 node {
     download = true
-    version = "16.14.0"  // Update to a more recent stable version of Node.js
-    npmVersion = "8.3.0"  // Update to a more recent stable version of NPM
+    version = "16.14.0"  // Update to a more recent version of Node.js
+    npmVersion = "8.3.0"  // Update to a more recent version of NPM
 }
 
+// Declare NPM tasks
+task npmInstall(type: NpmTask) {
+    args = ['install']
+}
 
-//declare a build task
-task build
+task npm_test(type: NpmTask) {
+    args = ['test']
+}
 
-//declare a task to create a zip of the app
+task npm_build(type: NpmTask) {
+    args = ['run', 'build']
+}
+
+// Declare a task to create a zip of the app
 task zip(type: Zip) {
-	from ('.') {
-		include "*"
-		include "bin/**"
-		include "data/**"
-		include "node_modules/**"
-		include "public/**"
-		include "routes/**"
-		include "views/**"
-	}
-	destinationDir(file("dist"))
-	baseName "trainSchedule"
+    from ('.') {
+        include "*"
+        include "bin/**"
+        include "data/**"
+        include "node_modules/**"
+        include "public/**"
+        include "routes/**"
+        include "views/**"
+    }
+    destinationDir(file("dist"))
+    baseName "trainSchedule"
 }
 
-//declare task dependencies
+// Declare task dependencies
 build.dependsOn zip
 zip.dependsOn npm_build
 npm_build.dependsOn npm_test
 npm_test.dependsOn npmInstall
-npm_build.dependsOn npmInstall
